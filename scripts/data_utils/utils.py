@@ -82,3 +82,26 @@ def summarize_data(data: pd.DataFrame):
     except Exception as e:
         logger.error(f"Error summarizing data: {e}", exc_info=True)
         raise
+
+def convert_ip_to_int(ip):
+    """Converts an IP address to an integer format."""
+    try:
+        octets = list(map(int, ip.split('.')))
+        return (octets[0] << 24) + (octets[1] << 16) + (octets[2] << 8) + octets[3]
+    except:
+        return np.nan
+
+def merge_geolocation(transactions, ip_data):
+    """Merges fraud transactions dataset with geolocation dataset based on IP address."""
+    transactions['ip_integer'] = transactions['ip_address'].apply(convert_ip_to_int)
+    
+    ip_data['lower_bound_ip_address'] = ip_data['lower_bound_ip_address'].astype(int)
+    ip_data['upper_bound_ip_address'] = ip_data['upper_bound_ip_address'].astype(int)
+    
+    # Merge using lower and upper bound of IP
+    transactions = transactions.merge(ip_data, how='left', left_on='ip_integer', right_on='lower_bound_ip_address')
+    transactions.drop(columns=['ip_integer', 'lower_bound_ip_address', 'upper_bound_ip_address'], inplace=True)
+    
+    logger.info('Merged fraud dataset with geolocation data.')
+    logger.info("Merged transactions with geolocation data.")
+    return transactions
