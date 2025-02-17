@@ -5,7 +5,7 @@ import numpy as np
 # Setup logger for data_preprocessing
 sys.path.append(os.path.join(os.path.abspath(__file__), '..', '..', '..'))
 from scripts.data_utils.cleaning import handle_missing_values, clean_data
-from scripts.data_utils.feature_engineering import merge_geolocation
+from scripts.data_utils.utils import merge_geolocation
 from scripts.data_utils.loaders import load_data
 from scripts.utils.logger import setup_logger
 
