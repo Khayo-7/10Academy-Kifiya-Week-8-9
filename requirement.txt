@@ -10,5 +10,8 @@ joblib
 torch
 pytest
 httpx
-redis 
+redis
 fastapi-cache2
+flask
+dash
+plotly
