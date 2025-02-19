@@ -31,6 +31,10 @@ app.logger.addHandler(handler)
 MODEL_PATH = "models/best_model/best_model.pkl"
 model = joblib.load(MODEL_PATH)
 
+@app.get("/")
+def root():
+    return {"message": "Fraud Detection API is running!"}
+    
 @app.route("/predict", methods=["POST"])
 @fraud_counter
 def predict():

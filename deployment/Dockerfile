@@ -14,6 +14,9 @@ EXPOSE 5000
 # CMD ["python", "serve_model.py"]
 CMD ["python", "dashboard.py"]
 
+# # Start FastAPI server
+# CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
 # docker build -t fraud-detection-api .
 # docker run -p 5000:5000 fraud-detection-api
 # docker build -t fraud-detection-dashboard .
