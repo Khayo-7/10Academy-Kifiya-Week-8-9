@@ -37,7 +37,7 @@ def plot_count(data, column, title, palette="Set2", hue=None, figsize=(6, 4)):
 
     plt.figure(figsize=figsize)
     sns.countplot(x=column, data=data, hue=hue if hue else column,  order=data[column].value_counts().index, 
-                  palette=palette, legend=False)
+                    palette=palette, legend=False)
     plt.title(title)
     plt.xticks([0, 1], ['Non-Fraud', 'Fraud'], rotation=45)
     plt.show()
@@ -56,7 +56,7 @@ def plot_correlation(data, title, figsize=(10, 6)):
     plt.show()
 
 def plot_correlation(data: pd.DataFrame, title: str, figsize=(10, 6)):
- 
+
     numeric_data = data.select_dtypes(include=['int64', 'float64']) # Select only numeric columns
     plt.figure(figsize=figsize)
     sns.heatmap(numeric_data.corr(), annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
@@ -93,3 +93,27 @@ def plot_distribution(data, column, title, xlabel, ylabel, hue=None, figsize=(10
     plt.xticks([0, 1], ['Non-Fraud', 'Fraud'])
     plt.legend(["Non-Fraud", "Fraud"])
     plt.show()
+
+
+def plot_training_curves(history, model_name):
+    """Plot accuracy and loss curves and save as artifact."""
+    fig, ax = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Accuracy Plot
+    ax[0].plot(history.history['accuracy'], label='Train Accuracy')
+    ax[0].plot(history.history['val_accuracy'], label='Validation Accuracy')
+    ax[0].set_title(f'{model_name} Accuracy')
+    ax[0].set_xlabel('Epochs')
+    ax[0].set_ylabel('Accuracy')
+    ax[0].legend()
+
+    # Loss Plot
+    ax[1].plot(history.history['loss'], label='Train Loss')
+    ax[1].plot(history.history['val_loss'], label='Validation Loss')
+    ax[1].set_title(f'{model_name} Loss')
+    ax[1].set_xlabel('Epochs')
+    ax[1].set_ylabel('Loss')
+    ax[1].legend()
+
+    plt.savefig(f"models/{model_name}_training_curves.png")
+    plt.close()
