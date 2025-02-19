@@ -1,3 +1,4 @@
+from msilib import add_data
 from flask import Flask, request, jsonify
 import pandas as pd
 import joblib
@@ -67,6 +68,15 @@ def health_check():
     """Health check endpoint"""
     return jsonify({"status": "healthy"})
 
+@app.route("/api/fraud-data", methods=["GET"])
+def get_fraud_data():
+    """Serve fraud data to the dashboard"""
+    try:
+        data = add_data.to_dict(orient="records")
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
 
