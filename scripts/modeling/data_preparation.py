@@ -1,12 +1,8 @@
-import pandas as pd
 import numpy as np
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import train_test_split, StratifiedShuffleSplit
-import logging
-
-from scripts.data_utils.loaders import load_data
-
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 def preprocess_data(data, target, drop_columns=[]):
     """Prepare Data dataset: separate features and target."""
@@ -21,6 +17,16 @@ def stratified_split(X, y, test_size=0.2, random_state=42):
         X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
         y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
     return X_train, X_test, y_train, y_test
+
+def data_split(X, y, test_size=0.2, random_state=42):
+    """Performs stratified train-test split."""
+    return train_test_split(X, y, test_size=test_size, stratify=y, random_state=random_state)
+
+def feature_selection(X_train, y_train, k=20):
+    """Selects top K features using SelectKBest."""
+    selector = SelectKBest(score_func=f_classif, k=k)
+    X_train_selected = selector.fit_transform(X_train, y_train)
+    return X_train_selected, selector
 
 # def prepare_datasets(fraud_data_path, credit_card_path):
 #     """Load, preprocess, and split datasets."""

@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/Users/Darkles/10academy/10Academy-Kifiya-Week-8-9/notebooks/mlruns/314834426584512681/acb9b622083d460db8057d6bdf071447/artifacts
+end_time: 1739969209195
+entry_point_name: ''
+experiment_id: '314834426584512681'
+lifecycle_stage: active
+run_id: acb9b622083d460db8057d6bdf071447
+run_name: LogisticRegression_Fraud_Detection
+run_uuid: acb9b622083d460db8057d6bdf071447
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739969135677
+status: 3
+tags: []
+user_id: Darkles
