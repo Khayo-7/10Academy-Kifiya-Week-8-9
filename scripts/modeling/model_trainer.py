@@ -52,6 +52,11 @@ class ModelTrainer:
                 self.best_model_name = model_name
                 self._save_best_model(model, model_name)
 
+            # Add explainability tracking
+            if model_name == self.best_model_name:
+                mlflow.log_artifact("reports/explanations/shap")
+                mlflow.log_artifact("reports/explanations/lime")
+
     def train_keras_model(self, model_builder: callable, 
                         model_name: str, 
                         epochs: int = 50,
@@ -91,6 +96,11 @@ class ModelTrainer:
                 self.best_model = model
                 self.best_model_name = model_name
                 self._save_best_model(model, model_name)
+
+            # Add explainability tracking
+            if model_name == self.best_model_name:
+                mlflow.log_artifact("reports/explanations/shap")
+                mlflow.log_artifact("reports/explanations/lime")
             
     def _save_best_model(self, model: Any, model_name: str) -> None:
         """Save the best model to disk"""
