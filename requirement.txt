@@ -10,3 +10,5 @@ joblib
 torch
 pytest
 httpx
+redis 
+fastapi-cache2

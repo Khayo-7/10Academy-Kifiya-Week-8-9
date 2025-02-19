@@ -5,6 +5,8 @@ from utils.inference import predict_fraud
 from prometheus_client import Counter, Histogram, generate_latest
 from fastapi import FastAPI, Request
 import time
+from api.caching import cache_result, get_cached_result
+from api.tasks import process_fraud_detection
 
 # Metrics
 REQUEST_COUNT = Counter("api_requests_total", "Total API Requests", ["endpoint"])
@@ -25,6 +27,26 @@ def predict_transaction(data: TransactionInput, model_type: str = "ml"):
         return {"fraud": result["prediction"], "probability": result["probability"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/predict/")
+async def predict(request: Request):
+    data = await request.json()
+
+    # task = process_fraud_detection.delay(data)
+    # return {"task_id": task.id, "status": "Processing"}
+
+    cache_key = f"fraud:{json.dumps(data)}"
+    
+    cached_result = get_cached_result(cache_key)
+    if cached_result:
+        return cached_result
+
+    # Perform fraud detection here...
+    result = {"fraud": False, "confidence": 0.92}
+
+    # Cache the result
+    cache_result(cache_key, result)
+    return result
 
 @app.get("/")
 def root():

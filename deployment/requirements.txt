@@ -4,3 +4,6 @@ dash==2.11.1
 dash-bootstrap-components==1.4.1
 plotly==5.15.0
 gunicorn==20.1.0
+redis 
+fastapi-cache2
+celery
