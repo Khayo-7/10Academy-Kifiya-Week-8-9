@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fraud-detection-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: fraud-detection-api
+  template:
+    metadata:
+      labels:
+        app: fraud-detection-api
+    spec:
+      containers:
+      - name: fraud-detection-api
+        image: khayo/fraud-detection-api:latest
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fraud-api-service
+spec:
+  selector:
+    app: fraud-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: LoadBalancer
+
+# kubectl apply -f deployment.yaml
+# kubectl get deployments
+# kubectl autoscale deployment fraud-api --cpu-percent=50 --min=2 --max=10

@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/Users/Darkles/10academy/10Academy-Kifiya-Week-8-9/notebooks/mlruns/314834426584512681/05004d398e144715bce4fdcbf49708f2/artifacts
+end_time: 1739969307814
+entry_point_name: ''
+experiment_id: '314834426584512681'
+lifecycle_stage: active
+run_id: 05004d398e144715bce4fdcbf49708f2
+run_name: GradientBoosting_Fraud_Detection
+run_uuid: 05004d398e144715bce4fdcbf49708f2
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739969256309
+status: 3
+tags: []
+user_id: Darkles

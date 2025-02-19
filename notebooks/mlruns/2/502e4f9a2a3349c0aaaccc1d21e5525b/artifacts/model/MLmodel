@@ -1,0 +1,34 @@
+artifact_path: model
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.1
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.1
+is_signature_from_type_hint: false
+mlflow_version: 2.20.2
+model_size_bytes: 1078
+model_uuid: adb8705b1f1e4872ab7f038ad73a1f87
+run_id: 502e4f9a2a3349c0aaaccc1d21e5525b
+signature:
+  inputs: '[{"type": "double", "name": "purchase_value", "required": true}, {"type":
+    "long", "name": "source", "required": true}, {"type": "long", "name": "browser",
+    "required": true}, {"type": "long", "name": "sex", "required": true}, {"type":
+    "long", "name": "age", "required": true}, {"type": "long", "name": "country",
+    "required": true}, {"type": "double", "name": "hour_of_day", "required": true},
+    {"type": "double", "name": "day_of_week", "required": true}, {"type": "double",
+    "name": "time_diff", "required": true}, {"type": "double", "name": "transaction_velocity",
+    "required": true}, {"type": "double", "name": "signup_to_purchase_hours", "required":
+    true}, {"type": "long", "name": "signup_delay_bucket", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-02-19 14:50:04.870036'

@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, ipaddress
 import numpy as np
 import pandas as pd
 from io import StringIO
@@ -83,25 +83,58 @@ def summarize_data(data: pd.DataFrame):
         logger.error(f"Error summarizing data: {e}", exc_info=True)
         raise
 
-def convert_ip_to_int(ip):
+def ip_to_int(ip):
     """Converts an IP address to an integer format."""
     try:
-        octets = list(map(int, ip.split('.')))
-        return (octets[0] << 24) + (octets[1] << 16) + (octets[2] << 8) + octets[3]
+        return int(ipaddress.IPv4Address(ip))
+        # octets = list(map(int, ip.split('.')))
+        # return (octets[0] << 24) + (octets[1] << 16) + (octets[2] << 8) + octets[3]
     except:
         return np.nan
 
-def merge_geolocation(transactions, ip_data):
-    """Merges fraud transactions dataset with geolocation dataset based on IP address."""
-    transactions['ip_integer'] = transactions['ip_address'].apply(convert_ip_to_int)
+def int_to_ip(ip_int):
+    return str(ipaddress.IPv4Address(ip_int))
+
+def map_merge_geolocation(transactions: pd.DataFrame, ip_data: pd.DataFrame) -> pd.DataFrame:
+    """
+    Merges fraud transactions dataset with geolocation dataset based on IP address
+    to map IP addresses to country using interval-based lookup.
+    """
+    # Validate input columns
+    required_transactions_columns = {"ip_address"}
+    required_ip_data_columns = {"lower_bound_ip_address", "upper_bound_ip_address", "country"}
     
-    ip_data['lower_bound_ip_address'] = ip_data['lower_bound_ip_address'].astype(int)
-    ip_data['upper_bound_ip_address'] = ip_data['upper_bound_ip_address'].astype(int)
-    
-    # Merge using lower and upper bound of IP
-    transactions = transactions.merge(ip_data, how='left', left_on='ip_integer', right_on='lower_bound_ip_address')
-    transactions.drop(columns=['ip_integer', 'lower_bound_ip_address', 'upper_bound_ip_address'], inplace=True)
-    
-    logger.info('Merged fraud dataset with geolocation data.')
-    logger.info("Merged transactions with geolocation data.")
+    if not required_transactions_columns.issubset(transactions.columns):
+        raise ValueError(f"Transactions DataFrame must contain columns: {required_transactions_columns}")
+    if not required_ip_data_columns.issubset(ip_data.columns):
+        raise ValueError(f"IP data DataFrame must contain columns: {required_ip_data_columns}")
+
+    # Ensure the IP columns are of type int64 for accurate comparison
+    transactions["ip_address"] = transactions["ip_address"].astype("int64")
+    ip_data["lower_bound_ip_address"] = ip_data["lower_bound_ip_address"].astype("int64")
+    ip_data["upper_bound_ip_address"] = ip_data["upper_bound_ip_address"].astype("int64")
+
+    # Sort IP data by lower_bound_ip_address for merge_asof
+    ip_data = ip_data.sort_values(by="lower_bound_ip_address")
+
+    # Perform a merge_asof to map IPs to their corresponding ranges
+    transactions = pd.merge_asof(
+        transactions.sort_values(by="ip_address"),
+        ip_data,
+        left_on="ip_address",
+        right_on="lower_bound_ip_address",
+        direction="backward"
+    )
+
+    # Assign "Unknown" to IPs that don't fall within any range
+    transactions["country"] = transactions["country"].where(
+        transactions["ip_address"] <= transactions["upper_bound_ip_address"], "Unknown"
+    )
+
+    # Drop unnecessary columns
+    transactions = transactions.drop(columns=["lower_bound_ip_address", "upper_bound_ip_address"])
+
+    # Log the result
+    logger.info(f"Merged fraud transactions dataset with geolocation data. Resulting shape: {transactions.shape}")
+
     return transactions

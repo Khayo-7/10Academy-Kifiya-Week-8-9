@@ -2,3 +2,16 @@ pandas
 matplotlib
 seaborn
 numpy
+prometheus-client
+fastapi
+uvicorn
+scikit-learn
+joblib
+torch
+pytest
+httpx
+redis
+fastapi-cache2
+flask
+dash
+plotly

@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/Users/Darkles/10academy/10Academy-Kifiya-Week-8-9/notebooks/mlruns/314834426584512681/11ae814686624f46912bd18c94215615/artifacts
+end_time: 1739969987334
+entry_point_name: ''
+experiment_id: '314834426584512681'
+lifecycle_stage: active
+run_id: 11ae814686624f46912bd18c94215615
+run_name: MLP_Fraud_Detection
+run_uuid: 11ae814686624f46912bd18c94215615
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1739969962368
+status: 3
+tags: []
+user_id: Darkles

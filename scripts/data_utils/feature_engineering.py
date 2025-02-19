@@ -25,3 +25,20 @@ def compute_signup_to_purchase_delay(data: pd.DataFrame) -> pd.DataFrame:
     """Compute the time difference between signup and purchase in hours."""
     data["signup_to_purchase_hours"] = (data["purchase_time"] - data["signup_time"]).dt.total_seconds() / 3600
     return data
+
+def compute_fraud_rate_by_signup_delay(data: pd.DataFrame) -> pd.DataFrame:
+    """Categorize transactions into time delay buckets and compute fraud rates."""
+    data["signup_delay_bucket"] = pd.cut(
+        data["signup_to_purchase_hours"],
+        bins=[0, 1, 6, 24, 72, data["signup_to_purchase_hours"].max()],
+        labels=["<1hr", "1-6hrs", "6-24hrs", "1-3 days", ">3 days"]
+    )
+
+    fraud_rates = data.groupby("signup_delay_bucket")["class"].mean().reset_index()
+    return fraud_rates
+
+def summarize_signup_to_purchase_delay(df: pd.DataFrame):
+    """
+    Generate summary statistics for signup-to-purchase delay, grouped by fraud status.
+    """
+    return df.groupby("class")["signup_to_purchase_hours"].describe()
